@@ -20,9 +20,12 @@ namespace ASPWSHelper
 
         public IReadOnlyCollection<WebSocket> Clients { get => new ReadOnlyCollection<WebSocket>(clients); } 
 
+        public Encoding Encoding { get; set; }
+
         public WSRequestListener()
         {
             clients = new List<WebSocket>();
+            this.Encoding = Encoding.UTF8;
             WebSocketOptions = new Microsoft.AspNetCore.Builder.WebSocketOptions()
             {
                KeepAliveInterval = TimeSpan.FromMinutes(2),// Default value is two minutes
@@ -30,8 +33,11 @@ namespace ASPWSHelper
             };
         }
 
-        public async Task ListenAcceptAsync(object sender, HttpContext context)
+        public virtual async Task ListenAcceptAsync(object sender, HttpContext context)
         {
+            //The following code is managed in Middleware
+            //if (HttpContext.WebSockets.IsWebSocketRequest)
+
             WebSocket ws = await context.WebSockets.AcceptWebSocketAsync();
             clients.Add(ws);
             await ReceiveAsync(ws);
@@ -64,11 +70,14 @@ namespace ASPWSHelper
             }
         }*/
 
-        public async Task SendAsync(WebSocket ws, string Message)
+        public virtual async Task SendAsync(WebSocket ws, string Message)
         {
-            byte[] buff = Encoding.UTF8.GetBytes(Message);
+            byte[] buff =this.Encoding.GetBytes(Message);
             await ws.SendAsync(buff, WebSocketMessageType.Text,true,CancellationToken.None);
         }
+
+        public virtual int GetBufferSize()
+         => WebSocketOptions.ReceiveBufferSize;
 
     }
 

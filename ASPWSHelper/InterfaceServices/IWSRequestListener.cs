@@ -24,5 +24,7 @@ namespace ASPWSHelper.InterfaceServices
         Task ReceiveAsync(WebSocket ws);
 
         Task SendAsync(WebSocket ws, string Message);
+
+        public int GetBufferSize();
     }
 }
