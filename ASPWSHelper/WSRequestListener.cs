@@ -40,11 +40,11 @@ namespace ASPWSHelper
 
             WebSocket ws = await context.WebSockets.AcceptWebSocketAsync();
             clients.Add(ws);
-            await ReceiveAsync(ws);
+            await ReceiveAsync(ws, context);
         }
 
 
-        public abstract Task ReceiveAsync(WebSocket ws);
+        public abstract Task ReceiveAsync(WebSocket ws, HttpContext context);
 /*
         public async Task ReceiveAsync(WebSocket ws)
         {

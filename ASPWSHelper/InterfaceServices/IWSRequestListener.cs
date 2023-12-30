@@ -14,6 +14,8 @@ namespace ASPWSHelper.InterfaceServices
     /// </summary>
     public interface IWSRequestListener
     {
+        public Encoding Encoding { get; set; }
+
         /// <summary>
         /// This method is most likely sent from a middleware
         /// </summary>
@@ -21,10 +23,11 @@ namespace ASPWSHelper.InterfaceServices
         /// <param name="context"></param>
         Task ListenAcceptAsync(object sender, HttpContext context);
 
-        Task ReceiveAsync(WebSocket ws);
+        Task ReceiveAsync(WebSocket ws, HttpContext context);
 
         Task SendAsync(WebSocket ws, string Message);
 
         public int GetBufferSize();
+
     }
 }
