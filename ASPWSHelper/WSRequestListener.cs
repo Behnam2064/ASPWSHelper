@@ -16,19 +16,20 @@ namespace ASPWSHelper
     public abstract class WSRequestListener : IWSRequestListener
     {
         public static Microsoft.AspNetCore.Builder.WebSocketOptions WebSocketOptions;
-        private IList<WebSocket> clients { get; set; }
+        private static IList<WebSocket> clients { get; set; }
 
-        public IReadOnlyCollection<WebSocket> Clients { get => new ReadOnlyCollection<WebSocket>(clients); } 
+        public static IReadOnlyCollection<WebSocket> Clients { get => new ReadOnlyCollection<WebSocket>(clients); }
 
         public Encoding Encoding { get; set; }
 
         public WSRequestListener()
         {
-            clients = new List<WebSocket>();
+            if (clients == null)
+                clients = new List<WebSocket>();
             this.Encoding = Encoding.UTF8;
             WebSocketOptions = new Microsoft.AspNetCore.Builder.WebSocketOptions()
             {
-               KeepAliveInterval = TimeSpan.FromMinutes(2),// Default value is two minutes
+                KeepAliveInterval = TimeSpan.FromMinutes(2),// Default value is two minutes
 
             };
         }
@@ -45,35 +46,35 @@ namespace ASPWSHelper
 
 
         public abstract Task ReceiveAsync(WebSocket ws, HttpContext context);
-/*
-        public async Task ReceiveAsync(WebSocket ws)
-        {
-            byte[] buff;
-            while (ws.State == WebSocketState.Open)
-            {
-                buff = new byte[WSConfig.BufferSize];
-
-                WebSocketReceiveResult result = await ws.ReceiveAsync(buff, CancellationToken.None);
-                if (result != null)
+        /*
+                public async Task ReceiveAsync(WebSocket ws)
                 {
-                    if (result.MessageType == WebSocketMessageType.Text)
+                    byte[] buff;
+                    while (ws.State == WebSocketState.Open)
                     {
-                        string StrMsg = Encoding.UTF8.GetString(buff);
-                        await SendAsync(ws, StrMsg + "***");
+                        buff = new byte[WSConfig.BufferSize];
+
+                        WebSocketReceiveResult result = await ws.ReceiveAsync(buff, CancellationToken.None);
+                        if (result != null)
+                        {
+                            if (result.MessageType == WebSocketMessageType.Text)
+                            {
+                                string StrMsg = Encoding.UTF8.GetString(buff);
+                                await SendAsync(ws, StrMsg + "***");
+                            }
+                            if (result.MessageType == WebSocketMessageType.Close)
+                            {
+                                //your code 
+                                return;
+                            }
+                        }
                     }
-                    if (result.MessageType == WebSocketMessageType.Close)
-                    {
-                        //your code 
-                        return;
-                    }
-                }
-            }
-        }*/
+                }*/
 
         public virtual async Task SendAsync(WebSocket ws, string Message)
         {
-            byte[] buff =this.Encoding.GetBytes(Message);
-            await ws.SendAsync(buff, WebSocketMessageType.Text,true,CancellationToken.None);
+            byte[] buff = this.Encoding.GetBytes(Message);
+            await ws.SendAsync(buff, WebSocketMessageType.Text, true, CancellationToken.None);
         }
 
         public virtual int GetBufferSize()
