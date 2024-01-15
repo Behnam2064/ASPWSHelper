@@ -16,8 +16,12 @@ namespace ASPWSHelper
     public abstract class WSRequestListener : IWSRequestListener
     {
         public static Microsoft.AspNetCore.Builder.WebSocketOptions WebSocketOptions;
+
         private static IList<WebSocket> clients { get; set; }
 
+        /// <summary>
+        /// All connected clients (WebSockets)
+        /// </summary>
         public static IReadOnlyCollection<WebSocket> Clients { get => new ReadOnlyCollection<WebSocket>(clients); }
 
         public Encoding Encoding { get; set; }
@@ -46,30 +50,7 @@ namespace ASPWSHelper
 
 
         public abstract Task ReceiveAsync(WebSocket ws, HttpContext context);
-        /*
-                public async Task ReceiveAsync(WebSocket ws)
-                {
-                    byte[] buff;
-                    while (ws.State == WebSocketState.Open)
-                    {
-                        buff = new byte[WSConfig.BufferSize];
 
-                        WebSocketReceiveResult result = await ws.ReceiveAsync(buff, CancellationToken.None);
-                        if (result != null)
-                        {
-                            if (result.MessageType == WebSocketMessageType.Text)
-                            {
-                                string StrMsg = Encoding.UTF8.GetString(buff);
-                                await SendAsync(ws, StrMsg + "***");
-                            }
-                            if (result.MessageType == WebSocketMessageType.Close)
-                            {
-                                //your code 
-                                return;
-                            }
-                        }
-                    }
-                }*/
 
         public virtual async Task SendAsync(WebSocket ws, string Message)
         {

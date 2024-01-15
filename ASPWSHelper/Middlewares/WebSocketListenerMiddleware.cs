@@ -23,22 +23,12 @@ namespace ASPWSHelper.Middlewares
         /// 
         /// </summary>
         /// <param name="context">Input request</param>
-        /// <param name="listener">Must be registered as Singleton</param>
+        /// <param name="listener">Receiving WebSockets requests</param>
         /// <returns></returns>
         public async Task InvokeAsync(HttpContext context, IWSRequestListener listener)
         {
             if (context.WebSockets.IsWebSocketRequest)
             {
-                /*if (context.Request.Path == "/wschat")
-                {
-                    *//*
-                     WSListener wsf = new WSListener();
-                    
-                    await wsf.ListenAcceptAsync(context);
-                    *//*
-
-                    await listener.ListenAcceptAsync(context);
-                }*/
                 if (listener != null)
                     await listener.ListenAcceptAsync(this, context);
             }
