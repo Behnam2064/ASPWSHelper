@@ -61,6 +61,15 @@ namespace ASPWSHelper
         public virtual int GetBufferSize()
          => WebSocketOptions.ReceiveBufferSize;
 
+        public virtual Task StopConnections()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<IReadOnlyList<T>> GetClients<T>()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 
