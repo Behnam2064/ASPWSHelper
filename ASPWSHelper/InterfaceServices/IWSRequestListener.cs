@@ -30,7 +30,5 @@ namespace ASPWSHelper.InterfaceServices
 
         public Task StopConnections();
 
-        public Task<IReadOnlyList<T>> GetClients<T>();/* where T : class;*/
-
     }
 }
