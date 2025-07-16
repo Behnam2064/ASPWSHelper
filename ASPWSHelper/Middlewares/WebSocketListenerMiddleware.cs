@@ -31,11 +31,11 @@ namespace ASPWSHelper.Middlewares
             {
                 if (listener != null)
                     await listener.ListenAcceptAsync(this, context);
+
             }
-            else
-            {
-                await _next(context);
-            }
+
+            await _next(context);
+
         }
     }
 
